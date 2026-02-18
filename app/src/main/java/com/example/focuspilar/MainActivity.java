@@ -8,6 +8,12 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+/*
+*
+* @author  < a href=pilar_sb_cc@ciencias.unam.mx> Maria del Pilar Sanchez Benitez </a>
+*
+*/
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
