@@ -9,7 +9,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 /**
-* @author  <a href=pilar_sb_cc@ciencias.unam.mx> María del Pilar Sánchez Benítez </a>
+* @author  <a href=pilar_sb_cc@ciencias.unam.mx> Maria del Pilar Sanchez Benitez </a>
 *
 */
 
