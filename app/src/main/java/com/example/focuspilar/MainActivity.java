@@ -10,7 +10,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 /**
 * @author  <a href=pilar_sb_cc@ciencias.unam.mx> Maria del Pilar Sanchez Benitez </a>
-*
+* @author  <a href=erick6aelgg@ciencias.unam.mx> Erick Gael García Gutiérrez - erick6aelgg </a>
 */
 
 public class MainActivity extends AppCompatActivity {
