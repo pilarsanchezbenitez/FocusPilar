@@ -1,12 +1,25 @@
--- Programación de Dispositivos Móviles.
--- Practica 1: Configuración de Entorno, Git y Fundamentos de Java
--- María del Pilar Sánchez Benítez
+## Programación de Dispositivos Móviles.
+## Practica 2: Lógica y UI del Pomodoro Timer
+## María del Pilar Sánchez Benítez
+ 
 
-Practica para refuerzo de conocimientos en java y git; Además de un primer acercamiento a Android Studio con la generación y configuración de dos emuladores con diferentes caracteristicas
+### Con el objetivo de hacer entendible el ciclo de vida y poner en practica lo aprendido para el diseño de la interfaz de una aplicación. Se desarrollo una aplicaci+ón basada en la tecnica pomodoro para productividad.
 
 
-¿Tuviste problemas con la aceleración de hardware o la creación de los AVD?
-+  Al generar uno de los AVD, me encontre con el error de espacio insuficiente, por lo que tuve que limpiar el cahe del Android Sttudio.
-¿Por qué elegiste ArrayList sobre otras opciones?
-+ Decidi utilizar Array list, debidoa que es más sencillo trabajar con las operacioes de agrgar o eliminar 
-Si las tareas se guardaran en un servidor remoto, ¿qué cambiaría en el manejo de excepciones de tu función?
+#### ¿Cuál fue el mayor reto al gestionar el CountDownTimer y cómo evitaste que se crearan múltiples instancias al presionar el botón repetidamente?
+
+Cuando se presionara el botón iniciar no se tuvieran muchas veces  y a la par el conutDownTimer; esto se soluciona cancelado el temporizador  antes de crear uno nuevo.
+
+#### ¿Por qué es preferible usar un LinearLayout con addView para los puntos de progreso en lugar de declarar 4 ImageViews estáticos en el XML?
+Por que con el lineraLayout habría que mostrar u ocultar cada uno manualmente.
+
+#### Si quisiéramos añadir una función para que el usuario personalice sus propios tiempos de enfoque, ¿qué parte de tu lógica actual tendría que cambiar y cómo lo abordarías?
+
+Para poer realizar este cambio se debrán cambiar las constantes por variables, en la parte de la interfaz agregar un apartado para realizar la captura de los tiempos del usuario y esta información tomarla en el oncreate().
+
+#### ¿Cómo harían para que el tiempo del temporizador se mantenga si el usuario minimiza la app?
+
+Para que el temporizador siga corriendo aunque la app esté minimizada durante mucho tiempo
+se usa un `ForegroundService`. Este servicio muestra una notificación persistente ("Timer
+corriendo: 18:32") y contiene el `CountDownTimer`. La Activity se conecta al servicio
+mediante `bindService()` para leer y mostrar el tiempo en pantalla.
