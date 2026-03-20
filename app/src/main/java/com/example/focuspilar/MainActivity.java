@@ -25,6 +25,10 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 
+/**
+ * @Author pilar_sb_cc@ciencias.unam.mx
+ * */
+
 public class MainActivity extends AppCompatActivity {
 
 
