@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Categoría: Ajustes generales -->
+    <PreferenceCategory android:title="Ajustes">
+
+        <ListPreference
+            android:key="@string/theme_preference_key"
+            android:title="Tema de la aplicación"
+            android:summary="Elige entre modo claro u oscuro"
+            android:entries="@array/theme_options"
+            android:entryValues="@array/theme_values"
+            android:defaultValue="light" />
+
+    </PreferenceCategory>
+
+    <!-- Categoría: Idioma -->
+    <PreferenceCategory android:title="Idioma">
+
+        <ListPreference
+            android:key="@string/lang_preference_key"
+            android:title="Idioma preferido"
+            android:summary="Selecciona el lenguaje de la interfaz"
+            android:entries="@array/lang_options"
+            android:entryValues="@array/lang_values"
+            android:defaultValue="es" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

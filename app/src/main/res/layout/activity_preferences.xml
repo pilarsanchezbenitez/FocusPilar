@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Pantalla de preferencias de usuario.
+  Contiene toolbar de navegación y un contenedor para PreferencesFragment.
+-->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!-- Toolbar con botón de retroceso -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/preferences_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/background_color"
+        android:elevation="0dp" />
+
+    <!-- Línea divisoria decorativa -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/color_border" />
+
+    <!-- Contenedor donde se inyecta PreferencesFragment -->
+    <FrameLayout
+        android:id="@+id/preferences_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</LinearLayout>
