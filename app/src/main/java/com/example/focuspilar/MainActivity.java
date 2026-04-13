@@ -1,16 +1,25 @@
 package com.example.focuspilar;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
 
 import android.content.Context;
 
+import com.example.focuspilar.model.Session;
+import com.example.focuspilar.model.SessionManager;
 import com.example.focuspilar.view.PreferencesActivity;
 import com.example.focuspilar.view.SessionHistoryActivity;
 import android.content.res.ColorStateList;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import android.os.CountDownTimer;
 import android.os.VibrationEffect;
@@ -72,6 +81,10 @@ public class MainActivity extends AppCompatActivity {
     private long timeLeftMillis = FOCUS_DURATION_MS;
     private int focusSessionsCompleted = 0;
 
+    // Persistencia de sesiones
+    private SessionManager sessionManager;
+    private long sessionStartTime = 0; // marca de tiempo al iniciar el cronómetro
+
     /**
      * PUNTO EXTRA
      * Para la persistencia
@@ -97,11 +110,28 @@ public class MainActivity extends AppCompatActivity {
      * Inicializa la actividad junto con todos sus componentes
      * @param savedInstanceState Estado guardado de la aplicación
      */
+    /**
+     * Aplica el idioma guardado antes de inflar cualquier vista.
+     */
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(newBase);
+        String lang = prefs.getString(
+                newBase.getString(R.string.lang_preference_key).trim(), "es");
+        Locale locale = new Locale(lang);
+        Locale.setDefault(locale);
+        Configuration config = new Configuration();
+        config.setLocale(locale);
+        super.attachBaseContext(newBase.createConfigurationContext(config));
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Inflamos nuestra vista.
         setContentView(R.layout.activity_main);
+        // Inicializamos el gestor de sesiones con contexto para acceder a SQLite
+        sessionManager = new SessionManager(this);
         // Inicializamos los elementos de la IU.
         bindViews();
         // Asignamos los escuchas.
@@ -240,6 +270,10 @@ public class MainActivity extends AppCompatActivity {
     private void startTimer() {
         // Actualizamos el estado del temporizador.
         timerState = TimerState.RUNNING;
+        // Registramos el instante de inicio solo si es una sesión nueva (no reanudada)
+        if (sessionStartTime == 0) {
+            sessionStartTime = System.currentTimeMillis();
+        }
         // Asignamos una texto mas adecuado al boton que controla nuestro temporizador.
         btnStartStop.setText("Pausar");
 
@@ -289,6 +323,9 @@ public class MainActivity extends AppCompatActivity {
         // Actualizamos el estado de nuestro temporizador.
         timerState = TimerState.IDLE;
 
+        // Guardamos la sesión que acaba de completarse ANTES de cambiar el modo
+        saveSession(true);
+
         // Actualizamos el estado de la sesion por su sucesora.
         if (currentMode == SessionMode.FOCUS) {
             focusSessionsCompleted++;
@@ -336,9 +373,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void resetTimer() {
-
+        // Si había una sesión activa (corriendo o pausada), la guardamos como interrumpida
+        if (timerState != TimerState.IDLE && sessionStartTime > 0) {
+            saveSession(false);
+        }
         cancelTimer();
-        timerState =TimerState.IDLE;
+        timerState = TimerState.IDLE;
 
         // Reiniciar el texto del botón
         resetModeTime();
@@ -418,6 +458,44 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // =========================================================================
+    // Persistencia de sesiones
+    // =========================================================================
+
+    /**
+     * Construye un objeto Session con los datos del cronómetro actual
+     * y lo delega al SessionManager para guardarlo en SQLite.
+     *
+     * @param completed true si el temporizador llegó a cero, false si fue interrumpido
+     */
+    private void saveSession(boolean completed) {
+        if (sessionStartTime == 0) return; // no había sesión activa
+
+        SimpleDateFormat dateFmt = new SimpleDateFormat("EEE, dd MMM yyyy", Locale.getDefault());
+        SimpleDateFormat timeFmt = new SimpleDateFormat("HH:mm",            Locale.getDefault());
+
+        String date      = dateFmt.format(new Date(sessionStartTime));
+        String startTime = timeFmt.format(new Date(sessionStartTime));
+        int    duration  = modeDurationMinutes(currentMode);
+        String type      = modeLabel(currentMode);
+
+        sessionManager.addSession(new Session(type, date, startTime, duration, completed));
+
+        // Resetear la marca de tiempo para la próxima sesión
+        sessionStartTime = 0;
+    }
+
+    /**
+     * Devuelve la duración esperada en minutos según el modo de sesión.
+     */
+    private int modeDurationMinutes(SessionMode mode) {
+        switch (mode) {
+            case BREAK: return 5;
+            case REST:  return 15;
+            default:    return 25;
+        }
+    }
+
+    // =========================================================================
     // Chips
     // =========================================================================
 
@@ -448,7 +526,7 @@ public class MainActivity extends AppCompatActivity {
         for (Chip chip : allChips) chip.setChipStrokeWidth(0);
 
         activeChip.setChipStrokeWidth(2 * density);
-        int colorAccent = ContextCompat.getColor(this, R.color.color_border_accent);
+        int colorAccent = ContextCompat.getColor(this, R.color.color_secondary);
         activeChip.setChipStrokeColor(ColorStateList.valueOf(colorAccent));
     }
 
