@@ -29,4 +29,10 @@
 
     <string name="session_count"> %1$d sesiones </string>
     <string name="title_preferences"> Preferencias </string>
+
+    <!-- Plurals: contador de sesiones en historial -->
+    <plurals name="session_count_plural">
+        <item quantity="one">%d sesión</item>
+        <item quantity="other">%d sesiones</item>
+    </plurals>
 </resources>
